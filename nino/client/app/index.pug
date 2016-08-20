@@ -1,0 +1,46 @@
+include mixins.pug
+
+doctype html
+
+html(lang="en", ng-app="app")
+    head
+        meta(charset="utf-8")
+        link(rel="shortcut icon", href="/media/images/favicon.png")
+        title Nino
+        
+        base(href="/")
+        meta(name="viewport", content="width=device-width, initial-scale=1.0")
+        meta(name="description", content="Search Stuff")
+        meta(name="author", content="Ofir123")
+
+        | {% if config.DEBUG %}
+        // Including livereload in production cause a performance hit for users,
+            so django will not emit the following line if the settings are not set to debug.
+        // buildCfg is provided by gulp and is the same as build.config.js.
+        +script("http://localhost:" + buildCfg.livereloadPort + "/livereload.js?snipver=1")
+        | {% endif %}
+
+        +script("/media/bower_components/jQuery/dist/jquery.min.js")
+
+        +style("/media/bower_components/bootstrap/dist/css/bootstrap.min.css")
+        +style("/media/bower_components/bootstrap/dist/css/bootstrap-theme.min.css")
+        +script("/media/bower_components/bootstrap/dist/js/bootstrap.min.js")
+
+        +style("/media/bower_components/font-awesome/css/font-awesome.min.css")
+        
+        +script("/media/bower_components/angular/angular.js")
+        +script("/media/bower_components/angular-resource/angular-resource.min.js")
+        +script("/media/bower_components/angular-animate/angular-animate.min.js")
+        +script("/media/bower_components/angular-sanitize/angular-sanitize.min.js")
+        
+        +script("/media/bower_components/angular-ui-router/release/angular-ui-router.min.js")
+        +script("/media/bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js")
+        
+        +style("/media/bower_components/angular-ui-select/dist/select.min.css")
+        +script("/media/bower_components/angular-ui-select/dist/select.min.js")
+        
+        +style("/media/build/app.css")
+        +script("/media/build/app.js")
+    
+    body(ng-cloak)
+        div#wrapper(ui-view)

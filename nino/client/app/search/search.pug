@@ -1,0 +1,28 @@
+#search
+    div.panel.panel-default#search-panel
+        div.panel-heading 
+            div.panel-title {{ searchVm.title }}
+        div.panel-body
+            ul.list-group
+                li.list-group-item
+                    label.control-label Title
+                        input(ng-model='searchVm.title')
+                    span  (Hint: Change me!)
+                
+                li.list-group-item
+                    label.control-label Term
+                        input(ng-model='searchVm.searchTerm', ng-init="searchVm.searchTerm", nino-enter="searchVm.search(searchVm.searchTerm)")
+                    span  (Hint: Enter on me!)
+                
+                li.list-group-item(ng-repeat="result in searchVm.searchResults")
+                    strong Name:
+                    span  {{ result.name }}
+                    br
+                    strong Data:
+                    div(ng-bind-html="result.data")
+                    
+                li.list-group-item
+                    ui-select(ng-model="searchVm.selected.target", theme="bootstrap")
+                        ui-select-match(placeholder="Select a target") {{ $select.selected.name }}
+                        ui-select-choices(repeat="target in searchVm.targets")
+                            div(ng-bind-html="target.name | highlight: $select.search")

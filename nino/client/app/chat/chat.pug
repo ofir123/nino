@@ -1,0 +1,19 @@
+#chat
+    #chat-panel.panel.panel-default
+        .panel-heading
+            .panel-title Echo Server
+        .panel-body
+            ul.list-group
+                li.list-group-item
+                    label.control-label Room
+                    ui-select(ng-model="chatVm.selected.room", ng-change= "chatVm.changeRoom(chatVm.selected.room)", theme="bootstrap")
+                        ui-select-match(placeholder="Select a room") {{ $select.selected.name }}
+                        ui-select-choices(repeat="room in chatVm.rooms")
+                            div(ng-bind-html="room.name | highlight: $select.search")
+                    span (Hint: Select me!)
+                li.list-group-item
+                    label.control-label Message
+                        input(ng-model='message', ng-init="message", nino-enter="chatVm.sendMessage(message)")
+                    p (Hint: Write your meesage, and press Enter!)
+                li.list-group-item(ng-repeat="message in chatVm.messageList")
+                    | {{ message.data }}
