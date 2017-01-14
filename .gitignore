@@ -47,6 +47,5 @@ coverage.xml
 # Sphinx documentation
 docs/_build/
 
-# Node & Bower.
+# Node modules.
 node_modules/
-bower_components

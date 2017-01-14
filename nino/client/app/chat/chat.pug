@@ -1,19 +1,25 @@
 #chat
-    #chat-panel.panel.panel-default
-        .panel-heading
-            .panel-title Echo Server
-        .panel-body
-            ul.list-group
-                li.list-group-item
-                    label.control-label Room
-                    ui-select(ng-model="chatVm.selected.room", ng-change= "chatVm.changeRoom(chatVm.selected.room)", theme="bootstrap")
-                        ui-select-match(placeholder="Select a room") {{ $select.selected.name }}
-                        ui-select-choices(repeat="room in chatVm.rooms")
-                            div(ng-bind-html="room.name | highlight: $select.search")
-                    span (Hint: Select me!)
-                li.list-group-item
-                    label.control-label Message
-                        input(ng-model='message', ng-init="message", nino-enter="chatVm.sendMessage(message)")
-                    p (Hint: Write your meesage, and press Enter!)
-                li.list-group-item(ng-repeat="message in chatVm.messageList")
+    md-card#chat-card
+        md-toolbar.md-accent
+            .md-toolbar-tools
+                md-button.md-icon-button(aria-label="Back", ui-sref="main")
+                    md-icon(md-svg-icon="/media/images/icons/back.svg")
+                span.md-headline Echo Server
+        md-card-content
+            form(name="chatVm.messageForm")
+                div(layout="column")
+                    md-input-container.md-block
+                        label Room
+                        md-select(ng-model="chatVm.selected.room", ng-change="chatVm.changeRoom(chatVm.selected.room)", name="room", required, nino-autofocus)
+                            md-option(ng-repeat="room in chatVm.rooms", ng-value="room")
+                                | {{ room.name }}
+                        div(ng-messages="chatVm.messageForm.room.$error")
+                            div(ng-message="required") Room is required!
+                    md-input-container.md-block
+                        label Message
+                        input(ng-model="message", ng-init="message", name="message", required, nino-enter="chatVm.messageForm.$valid && chatVm.sendMessage(message)")
+                        .hint (Hint: Write your message, and press Enter!)
+            md-list.md-dense(flex, ng-show="chatVm.messageList.length > 0")
+                md-subheader.md-no-sticky Messages
+                md-list-item(ng-repeat="message in chatVm.messageList")
                     | {{ message.data }}

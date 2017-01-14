@@ -1,43 +1,45 @@
 (function() {
-    'use strict';
+  'use strict';
 
-    angular
-        .module('app.search', [])
-        .constant('defaultTitle', 'An elegant title...')
-        .controller('SearchController', SearchController);
+  angular
+    .module('app.search', [])
+    .constant('defaultTitle', 'An elegant title...')
+    .controller('SearchController', SearchController);
 
-    /* @ngInject */
-    function SearchController($rootScope, $state, defaultTitle, searchService) {
-        var searchVm = this;
+  /* @ngInject */
+  function SearchController($scope, $state, defaultTitle, searchService) {
+    var searchVm = this;
 
-        searchVm.title = defaultTitle;
-        searchVm.selected = {};
-        searchVm.loadFromState = loadFromState;
-        searchVm.search = search;
+    searchVm.title = defaultTitle;
+    searchVm.searchTerm = null;
+    searchVm.selected = {};
+    searchVm.searchResults = [];
 
-        searchVm.targets = [
-            {name: 'Foo'},
-            {name: 'Bar'},
-            {name: 'Buzz'}
-        ];
+    searchVm.loadFromState = loadFromState;
+    searchVm.search = search;
 
-        // When the state changes, the controller will be updated and a search will take place.
-        $rootScope.$on('$stateChangeSuccess', function () {
-            searchVm.loadFromState();
+    // When the state changes, the controller will be updated and a search will take place.
+    $scope.$on('$stateChangeSuccess', function () {
+      searchVm.loadFromState();
+    });
+
+    // Load local variables from the state (the URL of the page).
+    function loadFromState() {
+      searchVm.searchTerm = $state.params.term;
+      if (searchVm.searchTerm) {
+        searchService.search({
+          'term': searchVm.searchTerm
+        }).then(function (data) {
+          searchVm.searchResults = data;
         });
-
-        // Load local variables from the state (the URL of the page).
-        function loadFromState() {
-            searchVm.searchTerm = $rootScope.$stateParams.term || 'sir';
-            searchService.query({'q': searchVm.searchTerm}, function(data) {
-                searchVm.searchResults = data;
-            });
-        }
-
-        function search(term) {
-            $state.go('search.term', {term: term});
-        }
-
+      }
     }
+
+    function search() {
+      $state.go('search.term', {
+        term: searchVm.searchTerm
+      });
+    }
+  }
 
 })();

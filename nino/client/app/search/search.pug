@@ -1,28 +1,26 @@
 #search
-    div.panel.panel-default#search-panel
-        div.panel-heading 
-            div.panel-title {{ searchVm.title }}
-        div.panel-body
-            ul.list-group
-                li.list-group-item
-                    label.control-label Title
-                        input(ng-model='searchVm.title')
-                    span  (Hint: Change me!)
-                
-                li.list-group-item
-                    label.control-label Term
-                        input(ng-model='searchVm.searchTerm', ng-init="searchVm.searchTerm", nino-enter="searchVm.search(searchVm.searchTerm)")
-                    span  (Hint: Enter on me!)
-                
-                li.list-group-item(ng-repeat="result in searchVm.searchResults")
-                    strong Name:
-                    span  {{ result.name }}
-                    br
-                    strong Data:
-                    div(ng-bind-html="result.data")
-                    
-                li.list-group-item
-                    ui-select(ng-model="searchVm.selected.target", theme="bootstrap")
-                        ui-select-match(placeholder="Select a target") {{ $select.selected.name }}
-                        ui-select-choices(repeat="target in searchVm.targets")
-                            div(ng-bind-html="target.name | highlight: $select.search")
+    md-card#search-card
+        md-toolbar.md-warn
+            .md-toolbar-tools
+                md-button.md-icon-button(aria-label="Back", ui-sref="main")
+                    md-icon(md-svg-icon="/media/images/icons/back.svg")
+                span.md-headline {{ searchVm.title }}
+        md-card-content
+            form(name="searchVm.searchForm", ng-submit="searchVm.searchForm.$valid && searchVm.search()")
+                div(layout="column")
+                    md-input-container.md-block
+                        label Title
+                        input(ng-model="searchVm.title", name="title")
+                        .hint (Hint: Change me!)
+                    md-input-container.md-block
+                        label Term
+                        input(ng-model="searchVm.searchTerm", ng-init="searchVm.searchTerm", name="term", required, nino-autofocus)
+                        div(ng-messages="searchVm.searchForm.term.$error")
+                            div(ng-message="required") Term is required!
+                    md-button.md-raised.md-primary(type="submit" ng-disabled="searchVm.searchForm.$invalid") Search
+            md-list.md-dense(flex, ng-show="searchVm.searchResults.length > 0")
+                md-subheader.md-no-sticky Results
+                md-list-item.md-2-line(ng-repeat="result in searchVm.searchResults")
+                    .md-list-item-text
+                        h3 {{ result.name }}
+                        p(ng-bind-html="result.data")

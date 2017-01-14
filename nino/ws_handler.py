@@ -6,10 +6,10 @@ class AppWebSocketHandler(WebSocketHandler):
     """
     A global socket that sends & receives generic events to/from all users.
 
-    Message can be sent with "send_event", and callbacks registered with "register_event".
+    Messages can be sent with "send_event", and callbacks registered with "register_event".
     """
-    websocket_to_room = {}
-    message_handlers = {}
+    websocket_to_room = dict()
+    message_handlers = dict()
 
     def open(self):
         AppWebSocketHandler.websocket_to_room[self] = None
@@ -22,7 +22,7 @@ class AppWebSocketHandler(WebSocketHandler):
         if 'type' in message and message['type'] in AppWebSocketHandler.message_handlers:
             AppWebSocketHandler.message_handlers[message['type']](self, message)
         else:
-            self.write_message({'type': 'error', 'msg': 'Invalid event received'})
+            self.write_message({'type': 'error', 'message': 'Invalid event received'})
 
     @classmethod
     def send_event(cls, event_type, event_room=None, **kwargs):
@@ -47,16 +47,16 @@ class AppWebSocketHandler(WebSocketHandler):
 
     def check_origin(self, origin):
         """
-        This was override for supporting tornado > 4.0
+        This was override for supporting Tornado > 4.0.
         """
         return True
 
 
-def type_msg_handler(src_socket, message):
+def type_message_handler(src_socket, message):
     socket_room = AppWebSocketHandler.websocket_to_room[src_socket]
-    AppWebSocketHandler.send_event('msg', event_room=socket_room, **message)
+    AppWebSocketHandler.send_event('message', event_room=socket_room, **message)
 
-AppWebSocketHandler.register_event('msg', type_msg_handler)
+AppWebSocketHandler.register_event('message', type_message_handler)
 
 
 def type_room_handler(src_socket, message):

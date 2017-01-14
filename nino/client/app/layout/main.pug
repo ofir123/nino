@@ -1,0 +1,16 @@
+#hello
+    md-card#hello-card(ng-model="message", ng-init="message = 'Search Now!'")
+        md-toolbar
+            .md-toolbar-tools
+                span.md-headline Nino
+        md-card-title
+            md-card-title-text
+                h2 {{ message }}
+        md-card-content
+            p Nino is a template project, just for you.
+            p Angular, Material, and much more!
+        md-card-actions(layout="row")
+            md-button.md-raised.md-warn(flex, ui-sref="search") Search
+            span(flex)
+            md-button.md-raised.md-accent(flex, ui-sref="chat") Chat
+

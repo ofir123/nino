@@ -1,4 +1,5 @@
-from flask import render_template, Blueprint, json, request
+from flask import render_template, Blueprint, request
+import ujson
 
 from . import config
 
@@ -14,9 +15,8 @@ def hello_world(path=None):
 
 @app_views.route('/api/search', methods=['POST'])
 def search():
-    data = json.loads(request.data)
-    term = data['q']
-
+    data = ujson.loads(request.data)
+    term = data.get('term')
     results = [
         {
             'name': '1',
@@ -36,8 +36,8 @@ def search():
         }
     ]
 
-    if term != "":
+    if term:
         for result in results:
-            result['data'] = result['data'].replace(term, '<em>%s</em>' % term)
+            result['data'] = result['data'].replace(term, '<em>{}</em>'.format(term))
 
-    return json.dumps(results)
+    return ujson.dumps(results)

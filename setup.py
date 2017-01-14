@@ -1,10 +1,14 @@
 from setuptools import setup, find_packages
 
-REQUIRES = ['flask', 'tornado', 'ujson']
 
 setup(
     name="nino",
     version='1.0',
     packages=find_packages(),
-    install_requires=REQUIRES
+    install_requires=['logbook', 'tornado', 'flask', 'click', 'ujson'],
+    entry_points={
+        'console_scripts': [
+            'ninod = nino.run_server:main'
+        ]
+    }
 )
